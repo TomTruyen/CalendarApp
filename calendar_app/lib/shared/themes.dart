@@ -7,6 +7,9 @@ const Color pinkColor = Color(0xFFFF4667);
 const Color darkGreyColor = Color(0xFF121212);
 
 class Themes {
+  static const lightPrimary = blueColor;
+  static const darkPrimary = darkGreyColor;
+
   static const lightStatus = Colors.white;
   static const darkStatus = darkGreyColor;
 

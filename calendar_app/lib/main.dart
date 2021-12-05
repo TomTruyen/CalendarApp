@@ -42,8 +42,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Calendar App',
-      theme: Themes.light,
-      darkTheme: Themes.dark,
+      theme: Themes.light.copyWith(
+        colorScheme:
+            Themes.light.colorScheme.copyWith(secondary: Themes.lightPrimary),
+      ),
+      darkTheme: Themes.dark.copyWith(
+        colorScheme:
+            Themes.dark.colorScheme.copyWith(secondary: Themes.darkPrimary),
+      ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: Scaffold(
         appBar: AppBar(
