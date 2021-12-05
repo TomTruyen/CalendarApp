@@ -22,7 +22,7 @@ class CalendarScreenState extends State<CalendarScreen> {
           DatePickerTimeline.DatePicker(
             DateTime.now(),
             initialSelectedDate: DateTime.now(),
-            selectionColor: Colors.blueAccent,
+            selectionColor: Theme.of(context).primaryColor,
             selectedTextColor: Colors.white,
             onDateChange: (DateTime date) {
               setState(() {

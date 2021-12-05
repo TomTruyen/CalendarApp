@@ -47,6 +47,7 @@ class _MyAppState extends State<MyApp> {
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: Scaffold(
         appBar: AppBar(
+          elevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor:
                 _isDarkMode ? Themes.darkStatus : Themes.lightStatus,
@@ -54,8 +55,16 @@ class _MyAppState extends State<MyApp> {
           actions: <Widget>[
             IconButton(
               icon: _isDarkMode
-                  ? const Icon(Icons.light_mode_outlined)
-                  : const Icon(Icons.dark_mode_outlined),
+                  ? const Icon(
+                      Icons.light_mode_outlined,
+                      color: Colors.white,
+                      size: 20,
+                    )
+                  : const Icon(
+                      Icons.dark_mode_outlined,
+                      color: Colors.black,
+                      size: 20,
+                    ),
               onPressed: () {
                 setTheme(!_isDarkMode);
               },
