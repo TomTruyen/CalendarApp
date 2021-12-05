@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const Color blueColor = Color(0xFF4e5ae8);
 const Color yellowolor = Color(0xFFFFB746);
@@ -26,6 +27,26 @@ class Themes {
     scaffoldBackgroundColor: darkGreyColor,
     appBarTheme: const AppBarTheme(
       backgroundColor: darkGreyColor,
+    ),
+  );
+}
+
+TextStyle get headingStyle {
+  return GoogleFonts.lato(
+    textStyle: const TextStyle(
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+  );
+}
+
+TextStyle get subHeadingStyle {
+  return GoogleFonts.lato(
+    textStyle: const TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: Colors.grey,
     ),
   );
 }
