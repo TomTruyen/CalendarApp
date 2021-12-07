@@ -1,3 +1,4 @@
+import 'package:calendar_app/screens/add_task_screen.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/widgets/button.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart'
@@ -69,7 +70,15 @@ class CalendarScreenState extends State<CalendarScreen> {
               )
             ],
           ),
-          Button(label: "+ Add Task", onTap: () => null)
+          Button(
+            label: "+ Add Task",
+            onTap: () => {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (_) => const AddTaskScreen()),
+              ),
+            },
+          )
         ],
       ),
     );
