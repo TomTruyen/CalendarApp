@@ -43,11 +43,12 @@ class TaskService {
     await db.execute('''
       CREATE TABLE $tableTask (
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-        $columnTitle TEXT NOT NULL' '$columnNote TEXT,
+        $columnTitle TEXT NOT NULL,
+        $columnNote TEXT,
         $columnDate INTEGER,
         $columnStartTime INTEGER,
         $columnEndTime INTEGER,
-        $columnColor INTEGER
+        $columnColor INTEGER,
         $columnCompleted INTEGER
       )
     ''');
@@ -83,6 +84,43 @@ class TaskService {
     if (maps.isNotEmpty) return Task.fromMap(maps.first);
 
     return null;
+  }
+
+  Future<List<Task>> getByDate(DateTime date) async {
+    // Get start of day (midnight)
+    int start = DateTime(
+      date.year,
+      date.month,
+      date.day,
+    ).millisecondsSinceEpoch;
+
+    // Get last possible moment of day
+    int end = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      23,
+      59,
+      59,
+      999,
+      999,
+    ).millisecondsSinceEpoch;
+
+    Database db = await instance.database;
+
+    List<Map<String, Object?>> maps = await db.rawQuery(
+      '''
+        SELECT * FROM $tableTask
+        WHERE $columnDate >= $start
+        AND $columnDate <= $end
+      ''',
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.map((m) => Task.fromMap(m)).toList();
+    }
+
+    return [];
   }
 
   Future<int> delete(int id) async {
