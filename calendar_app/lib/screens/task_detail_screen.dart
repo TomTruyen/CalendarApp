@@ -99,7 +99,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 ),
               ),
             );
-            Toast.display(context, message: "EDIT PAGE OPENING");
           },
         ),
         IconButton(
