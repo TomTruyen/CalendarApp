@@ -35,8 +35,8 @@ class _TaskScreenState extends State<TaskScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
-  DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(const Duration(minutes: 15));
+  DateTime _startTime = DateTime.now().add(const Duration(minutes: 1));
+  DateTime _endTime = DateTime.now().add(const Duration(minutes: 16));
   Color _selectedColor = const Color(0xFF4e5ae8);
 
   bool _isEdit = false;
@@ -63,10 +63,13 @@ class _TaskScreenState extends State<TaskScreen> {
         text: widget.editTask?.note ?? "",
       );
       _selectedDate = widget.editTask?.date ?? DateTime.now();
-      _startTime = widget.editTask?.startTime ?? DateTime.now();
+      _startTime = widget.editTask?.startTime ??
+          DateTime.now().add(
+            const Duration(minutes: 1),
+          );
       _endTime = widget.editTask?.endTime ??
           DateTime.now().add(
-            const Duration(minutes: 15),
+            const Duration(minutes: 16),
           );
       _selectedColor = widget.editTask?.color ?? const Color(0xFF4e5ae8);
     });
