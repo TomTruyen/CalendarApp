@@ -10,32 +10,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class AddTaskScreen extends StatefulWidget {
+class TaskScreen extends StatefulWidget {
   final Function refresh;
+  final bool isEdit;
+  final Task? editTask;
 
-  const AddTaskScreen({Key? key, required this.refresh}) : super(key: key);
+  const TaskScreen({
+    Key? key,
+    required this.refresh,
+    this.isEdit = false,
+    this.editTask,
+  }) : super(key: key);
 
   @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
+  State<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _TaskScreenState extends State<TaskScreen> {
   final TaskService _taskService = TaskService.instance;
   final ThemeService _themeService = ThemeService();
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
+  int? _id;
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(const Duration(minutes: 15));
   Color _selectedColor = const Color(0xFF4e5ae8);
 
+  bool _isEdit = false;
   bool _isDarkMode = false;
 
   @override
   void initState() {
-    super.initState();
     init();
+    super.initState();
   }
 
   void init() async {
@@ -43,6 +52,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     setState(() {
       _isDarkMode = isDarkMode;
+      _isEdit = widget.isEdit;
+
+      _id = widget.editTask?.id;
+      _titleController = TextEditingController(
+        text: widget.editTask?.title ?? "",
+      );
+      _noteController = TextEditingController(
+        text: widget.editTask?.note ?? "",
+      );
+      _selectedDate = widget.editTask?.date ?? DateTime.now();
+      _startTime = widget.editTask?.startTime ?? DateTime.now();
+      _endTime = widget.editTask?.endTime ??
+          DateTime.now().add(
+            const Duration(minutes: 15),
+          );
+      _selectedColor = widget.editTask?.color ?? const Color(0xFF4e5ae8);
     });
   }
 
@@ -57,7 +82,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "Add Task",
+                _isEdit ? "Edit Task" : "Add Task",
                 style: headingStyle,
               ),
               InputField(
@@ -165,27 +190,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     ],
                   ),
                   Button(
-                    label: "Create Task",
-                    onTap: () async {
-                      Task task = Task();
-
-                      task.title = _titleController.text;
-                      task.note = _noteController.text;
-                      task.date = _selectedDate;
-                      task.startTime = _startTime;
-                      task.endTime = _endTime;
-                      task.color = _selectedColor;
-
-                      if ((await _taskService.insert(task)).id != null) {
-                        Toast.display(context, message: "Task added!");
-
-                        widget.refresh();
-
-                        if (Navigator.canPop(context)) Navigator.pop(context);
-                      } else {
-                        Toast.display(context, message: "Failed to add task.");
-                      }
-                    },
+                    label: _isEdit ? "Edit Task" : "Create Task",
+                    onTap: () => _saveTask(),
                   ),
                 ],
               )
@@ -198,6 +204,41 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   _formatTime({required DateTime time}) {
     return DateFormat("hh:mm a").format(time).toString();
+  }
+
+  _saveTask() async {
+    Task task = Task();
+
+    task.title = _titleController.text;
+    task.note = _noteController.text;
+    task.date = _selectedDate;
+    task.startTime = _startTime;
+    task.endTime = _endTime;
+    task.color = _selectedColor;
+
+    if (_isEdit) {
+      task.id = _id;
+
+      if ((await _taskService.update(task)) > 0) {
+        Toast.display(context, message: "Task updated!");
+
+        widget.refresh(task);
+
+        if (Navigator.canPop(context)) Navigator.pop(context);
+      } else {
+        Toast.display(context, message: "Failed to edit task.");
+      }
+    } else {
+      if ((await _taskService.insert(task)).id != null) {
+        Toast.display(context, message: "Task added!");
+
+        widget.refresh();
+
+        if (Navigator.canPop(context)) Navigator.pop(context);
+      } else {
+        Toast.display(context, message: "Failed to add task.");
+      }
+    }
   }
 
   _appBar() {

@@ -1,8 +1,10 @@
 import 'package:calendar_app/models/task.dart';
+import 'package:calendar_app/screens/task_screen.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/toast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -23,10 +25,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   bool _isDarkMode = false;
 
+  Task _task = Task();
+
   @override
   void initState() {
-    super.initState();
     init();
+    super.initState();
   }
 
   void init() async {
@@ -34,13 +38,20 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
     setState(() {
       _isDarkMode = isDarkMode;
+      _task = widget.task;
     });
+  }
+
+  void refresh(Task task) {
+    setState(() {
+      _task = task;
+    });
+
+    widget.refresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Task _task = widget.task;
-
     return Scaffold(
       appBar: _appBar(),
       body: Container(
@@ -77,7 +88,16 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             size: 20,
           ),
           onPressed: () {
-            Toast.display(context, message: "EDIT PAGE OPENING");
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (_) => TaskScreen(
+                  refresh: refresh,
+                  isEdit: true,
+                  editTask: _task,
+                ),
+              ),
+            );
           },
         ),
         IconButton(

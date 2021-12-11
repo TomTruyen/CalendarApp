@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:calendar_app/models/task.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TaskService {
@@ -30,8 +27,8 @@ class TaskService {
   }
 
   Future<Database> _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
+    String databasePath = await getDatabasesPath();
+    String path = join(databasePath, _databaseName);
     return await openDatabase(
       path,
       version: _databaseVersion,

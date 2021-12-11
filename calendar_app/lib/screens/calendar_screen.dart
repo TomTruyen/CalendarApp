@@ -1,5 +1,5 @@
 import 'package:calendar_app/models/task.dart';
-import 'package:calendar_app/screens/add_task_screen.dart';
+import 'package:calendar_app/screens/task_screen.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/widgets/button.dart';
@@ -66,7 +66,7 @@ class CalendarScreenState extends State<CalendarScreen> {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: (_) => AddTaskScreen(refresh: refresh),
+                  builder: (_) => TaskScreen(refresh: refresh),
                 ),
               );
             },
