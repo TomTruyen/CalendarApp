@@ -11,7 +11,9 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+  final Function refresh;
+
+  const AddTaskScreen({Key? key, required this.refresh}) : super(key: key);
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
@@ -176,6 +178,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
                       if ((await _taskService.insert(task)).id != null) {
                         Toast.display(context, message: "Task added!");
+
+                        widget.refresh();
+
                         if (Navigator.canPop(context)) Navigator.pop(context);
                       } else {
                         Toast.display(context, message: "Failed to add task.");
