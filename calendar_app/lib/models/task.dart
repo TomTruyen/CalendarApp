@@ -11,6 +11,8 @@ class Task {
   Color color = const Color(0xFF4e5ae8);
   bool completed = false;
 
+  Task();
+
   Map<String, Object?> toMap() {
     var map = <String, Object?>{
       TaskService.columnTitle: title,
@@ -39,6 +41,6 @@ class Task {
       map[TaskService.columnEndTime] as int,
     );
     color = Color(map[TaskService.columnColor] as int);
-    completed = map[TaskService.columnCompleted] as bool;
+    completed = (map[TaskService.columnCompleted] as int) == 1;
   }
 }
