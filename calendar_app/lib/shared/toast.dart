@@ -8,9 +8,7 @@ class Toast {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Center(
-          child: Text(message),
-        ),
+        content: Text(message, textAlign: TextAlign.center),
         duration: duration,
       ),
     );
