@@ -1,5 +1,6 @@
 import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/screens/task_screen.dart';
+import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
 import 'package:calendar_app/shared/themes.dart';
@@ -98,6 +99,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 ),
               ),
             );
+            Toast.display(context, message: "EDIT PAGE OPENING");
           },
         ),
         IconButton(
@@ -164,6 +166,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               onPressed: () async {
                 if (await _taskService.delete(widget.task.id) > 0) {
                   Toast.display(context, message: "Task deleted!");
+
+                  NotificationService().cancelScheduledNotification(
+                    widget.task,
+                  );
 
                   widget.refresh();
 

@@ -1,5 +1,6 @@
 import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/screens/task_screen.dart';
+import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/widgets/button.dart';
@@ -21,6 +22,20 @@ class CalendarScreen extends StatefulWidget {
 class CalendarScreenState extends State<CalendarScreen> {
   final TaskService _taskService = TaskService.instance;
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    NotificationService().init(context, refresh).whenComplete(
+          () => NotificationService()
+              .handleApplicationWasLaunchedFromNotification(
+            "",
+            context,
+            refresh,
+          ),
+        );
+
+    super.initState();
+  }
 
   void refresh() {
     setState(() {});

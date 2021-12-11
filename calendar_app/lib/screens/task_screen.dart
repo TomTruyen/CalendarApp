@@ -1,4 +1,5 @@
 import 'package:calendar_app/models/task.dart';
+import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
 import 'package:calendar_app/shared/themes.dart';
@@ -222,6 +223,9 @@ class _TaskScreenState extends State<TaskScreen> {
       if ((await _taskService.update(task)) > 0) {
         Toast.display(context, message: "Task updated!");
 
+        NotificationService().cancelScheduledNotification(task);
+        NotificationService().scheduleNotification(task);
+
         widget.refresh(task);
 
         if (Navigator.canPop(context)) Navigator.pop(context);
@@ -231,6 +235,8 @@ class _TaskScreenState extends State<TaskScreen> {
     } else {
       if ((await _taskService.insert(task)).id != null) {
         Toast.display(context, message: "Task added!");
+
+        NotificationService().scheduleNotification(task);
 
         widget.refresh();
 
