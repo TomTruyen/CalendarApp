@@ -6,8 +6,10 @@ import 'package:intl/intl.dart';
 
 class TaskItem extends StatelessWidget {
   final Task task;
+  final Function refresh;
 
-  const TaskItem({Key? key, required this.task}) : super(key: key);
+  const TaskItem({Key? key, required this.task, required this.refresh})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class TaskItem extends StatelessWidget {
             CupertinoPageRoute(
               builder: (_) => TaskDetailScreen(
                 task: task,
+                refresh: refresh,
               ),
             ),
           );

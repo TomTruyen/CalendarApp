@@ -126,7 +126,7 @@ class CalendarScreenState extends State<CalendarScreen> {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 Task task = snapshot.data[index];
-                return TaskItem(task: task);
+                return TaskItem(task: task, refresh: refresh);
               },
             );
           }

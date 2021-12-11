@@ -123,7 +123,7 @@ class TaskService {
     return [];
   }
 
-  Future<int> delete(int id) async {
+  Future<int> delete(int? id) async {
     Database db = await instance.database;
 
     return await db.delete(
