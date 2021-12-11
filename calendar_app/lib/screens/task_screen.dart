@@ -300,7 +300,9 @@ class _TaskScreenState extends State<TaskScreen> {
             mode: CupertinoDatePickerMode.time,
             initialDateTime: isStartTime ? _startTime : _endTime,
             dateOrder: DatePickerDateOrder.dmy,
-            minimumDate: isStartTime ? DateTime.now() : _startTime,
+            minimumDate: isStartTime
+                ? DateTime.now().add(const Duration(minutes: 1))
+                : _startTime,
             onDateTimeChanged: (DateTime time) {
               if (mounted) {
                 setState(() {
