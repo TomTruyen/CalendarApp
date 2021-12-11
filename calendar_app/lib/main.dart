@@ -43,12 +43,14 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Calendar App',
       theme: Themes.light.copyWith(
-        colorScheme:
-            Themes.light.colorScheme.copyWith(secondary: Themes.lightPrimary),
+        colorScheme: Themes.light.colorScheme.copyWith(
+          secondary: Themes.lightPrimary,
+        ),
       ),
       darkTheme: Themes.dark.copyWith(
-        colorScheme:
-            Themes.dark.colorScheme.copyWith(secondary: Themes.darkPrimary),
+        colorScheme: Themes.dark.colorScheme.copyWith(
+          secondary: Themes.darkPrimary,
+        ),
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: Scaffold(
