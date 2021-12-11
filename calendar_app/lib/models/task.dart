@@ -13,7 +13,7 @@ class Task {
 
   Task();
 
-  Map<String, Object?> toMap() {
+  Map<String, Object?> toMap({bool withId = false}) {
     var map = <String, Object?>{
       TaskService.columnTitle: title,
       TaskService.columnNote: note,
@@ -23,6 +23,10 @@ class Task {
       TaskService.columnColor: color.value,
       TaskService.columnCompleted: completed ? 1 : 0
     };
+
+    if (withId) {
+      map[TaskService.columnId] = id;
+    }
 
     return map;
   }
