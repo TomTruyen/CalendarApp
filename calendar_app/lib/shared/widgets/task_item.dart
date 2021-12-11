@@ -19,7 +19,7 @@ class TaskItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             color: task.color,
           ),
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
