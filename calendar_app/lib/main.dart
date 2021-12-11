@@ -62,6 +62,7 @@ class _MyAppState extends State<MyApp> {
           ),
           actions: <Widget>[
             IconButton(
+              splashRadius: 16,
               icon: _isDarkMode
                   ? const Icon(
                       Icons.light_mode_outlined,

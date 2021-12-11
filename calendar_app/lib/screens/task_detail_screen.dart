@@ -51,13 +51,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: _isDarkMode ? Themes.darkStatus : Themes.lightStatus,
       ),
-      leading: GestureDetector(
-        child: Icon(
-          Icons.arrow_back_ios,
+      leading: IconButton(
+        splashRadius: 16,
+        icon: Icon(
+          Icons.arrow_back_ios_new,
           color: _isDarkMode ? Colors.white : Colors.black,
-          size: 20,
+          size: 16,
         ),
-        onTap: () {
+        onPressed: () {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           }
@@ -65,6 +66,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       ),
       actions: <Widget>[
         IconButton(
+          splashRadius: 16,
           icon: Icon(
             Icons.create_outlined,
             color: _isDarkMode ? Colors.white : Colors.black,
@@ -75,6 +77,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           },
         ),
         IconButton(
+          splashRadius: 16,
           icon: Icon(
             Icons.delete_outlined,
             color: _isDarkMode ? Colors.white : Colors.black,

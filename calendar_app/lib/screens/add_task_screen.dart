@@ -206,13 +206,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: _isDarkMode ? Themes.darkStatus : Themes.lightStatus,
       ),
-      leading: GestureDetector(
-        child: Icon(
-          Icons.arrow_back_ios,
+      leading: IconButton(
+        splashRadius: 16,
+        icon: Icon(
+          Icons.arrow_back_ios_new,
           color: _isDarkMode ? Colors.white : Colors.black,
-          size: 20,
+          size: 16,
         ),
-        onTap: () {
+        onPressed: () {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           }
