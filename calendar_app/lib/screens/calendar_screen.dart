@@ -3,6 +3,7 @@ import 'package:calendar_app/screens/add_task_screen.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/widgets/button.dart';
+import 'package:calendar_app/shared/widgets/task_item.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart'
     as DatePickerTimeline;
 import 'package:flutter/cupertino.dart';
@@ -21,6 +22,10 @@ class CalendarScreenState extends State<CalendarScreen> {
   final TaskService _taskService = TaskService.instance;
   DateTime _selectedDate = DateTime.now();
 
+  void refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,9 +34,8 @@ class CalendarScreenState extends State<CalendarScreen> {
         children: <Widget>[
           _taskBar(),
           _datePicker(),
-          Expanded(
-            child: _taskList(),
-          )
+          const SizedBox(height: 20),
+          _taskList(),
         ],
       ),
     );
@@ -58,11 +62,13 @@ class CalendarScreenState extends State<CalendarScreen> {
           ),
           Button(
             label: "+ Add Task",
-            onTap: () => {
+            onTap: () {
               Navigator.push(
                 context,
-                CupertinoPageRoute(builder: (_) => const AddTaskScreen()),
-              ),
+                CupertinoPageRoute(
+                  builder: (_) => AddTaskScreen(refresh: refresh),
+                ),
+              );
             },
           )
         ],
@@ -72,7 +78,7 @@ class CalendarScreenState extends State<CalendarScreen> {
 
   Widget _datePicker() {
     return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20),
+      margin: const EdgeInsets.only(top: 20, left: 16, right: 16),
       child: DatePickerTimeline.DatePicker(
         DateTime.now(),
         initialSelectedDate: DateTime.now(),
@@ -95,30 +101,41 @@ class CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _taskList() {
-    return FutureBuilder(
-      future: _taskService.getByDate(_selectedDate),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.none ||
-            snapshot.data == null) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            Task task = snapshot.data[index];
-            return Column(
-              children: <Widget>[
-                Text(task.title),
-              ],
+    return Expanded(
+      child: FutureBuilder(
+        future: _taskService.getByDate(_selectedDate),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
             );
-          },
-        );
-      },
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+              ),
+            );
+          }
+
+          if (snapshot.hasData && snapshot.data.length > 0) {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                Task task = snapshot.data[index];
+                return TaskItem(task: task);
+              },
+            );
+          }
+
+          return const Center(
+            child: Text("No tasks."),
+          );
+        },
+      ),
     );
   }
 }
