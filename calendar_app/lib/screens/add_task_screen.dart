@@ -1,5 +1,8 @@
+import 'package:calendar_app/models/task.dart';
+import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
 import 'package:calendar_app/shared/themes.dart';
+import 'package:calendar_app/shared/toast.dart';
 import 'package:calendar_app/shared/widgets/button.dart';
 import 'package:calendar_app/shared/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,8 +18,11 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  final TaskService _taskService = TaskService.instance;
   final ThemeService _themeService = ThemeService();
 
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(const Duration(minutes: 15));
@@ -52,8 +58,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 "Add Task",
                 style: headingStyle,
               ),
-              const InputField(title: "Title", hint: "Enter your title"),
-              const InputField(title: "Note", hint: "Enter your note"),
+              InputField(
+                title: "Title",
+                hint: "Enter your title",
+                controller: _titleController,
+              ),
+              InputField(
+                title: "Note",
+                hint: "Enter your note",
+                controller: _noteController,
+              ),
               InputField(
                 title: "Date",
                 hint: DateFormat('dd/MM/yyyy').format(_selectedDate),
@@ -150,7 +164,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                   Button(
                     label: "Create Task",
-                    onTap: () => {print("TEST")},
+                    onTap: () async {
+                      Task task = Task();
+
+                      task.title = _titleController.text;
+                      task.note = _noteController.text;
+                      task.date = _selectedDate;
+                      task.startTime = _startTime;
+                      task.endTime = _endTime;
+                      task.color = _selectedColor;
+
+                      if ((await _taskService.insert(task)).id != null) {
+                        Toast.display(context, message: "Task added!");
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      } else {
+                        Toast.display(context, message: "Failed to add task.");
+                      }
+                    },
                   ),
                 ],
               )
