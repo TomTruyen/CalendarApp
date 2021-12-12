@@ -2,6 +2,7 @@ import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
+import 'package:calendar_app/shared/datetime_extension.dart';
 import 'package:calendar_app/shared/popup.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/toast.dart';
@@ -81,7 +82,7 @@ class _TaskScreenState extends State<TaskScreen> {
     return Scaffold(
       appBar: _appBar(),
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,6 +100,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 title: "Note",
                 hint: "Enter your note",
                 controller: _noteController,
+                isMultiline: true,
               ),
               InputField(
                 title: "Date",
@@ -208,7 +210,7 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   _formatTime({required DateTime time}) {
-    return DateFormat("hh:mm a").format(time).toString();
+    return DateFormat("hh:mm a").format(time);
   }
 
   _saveTask() async {
@@ -217,7 +219,7 @@ class _TaskScreenState extends State<TaskScreen> {
       return;
     }
 
-    if (_selectedDate.isBefore(DateTime.now())) {
+    if (_selectedDate.isBeforeDate(DateTime.now())) {
       _showError("Date can't be in the past.");
       return;
     }
@@ -334,6 +336,20 @@ class _TaskScreenState extends State<TaskScreen> {
     if (date != null && date != _selectedDate) {
       setState(() {
         _selectedDate = date;
+        _startTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          _startTime.hour,
+          _startTime.minute,
+        );
+        _endTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          _endTime.hour,
+          _endTime.minute,
+        );
       });
     }
   }
@@ -365,13 +381,22 @@ class _TaskScreenState extends State<TaskScreen> {
 
     if (time != null && mounted) {
       setState(() {
-        DateTime now = DateTime.now();
         if (isStartTime) {
-          _startTime =
-              DateTime(now.year, now.month, now.day, time.hour, time.minute);
+          _startTime = DateTime(
+            _selectedDate.year,
+            _selectedDate.month,
+            _selectedDate.day,
+            time.hour,
+            time.minute,
+          );
         } else {
-          _endTime =
-              DateTime(now.year, now.month, now.day, time.hour, time.minute);
+          _endTime = DateTime(
+            _selectedDate.year,
+            _selectedDate.month,
+            _selectedDate.day,
+            time.hour,
+            time.minute,
+          );
         }
 
         if (_endTime.isBefore(_startTime)) _endTime = _startTime;
