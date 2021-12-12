@@ -7,15 +7,17 @@ class InputField extends StatelessWidget {
   final TextEditingController? controller;
   final Widget? widget;
   final Function()? onClick;
+  final bool isMultiline;
 
-  const InputField({
-    Key? key,
-    required this.title,
-    required this.hint,
-    this.controller,
-    this.widget,
-    this.onClick,
-  }) : super(key: key);
+  const InputField(
+      {Key? key,
+      required this.title,
+      required this.hint,
+      this.controller,
+      this.widget,
+      this.onClick,
+      this.isMultiline = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,10 @@ class InputField extends StatelessWidget {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             child: Container(
-              height: 52,
+              height: isMultiline ? null : 52,
+              constraints: const BoxConstraints(minHeight: 52),
               margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.only(left: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.grey,
@@ -45,6 +48,9 @@ class InputField extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: TextFormField(
+                      keyboardType:
+                          isMultiline ? TextInputType.multiline : null,
+                      maxLines: isMultiline ? null : 1,
                       onTap: onClick,
                       readOnly: widget != null,
                       autofocus: false,
