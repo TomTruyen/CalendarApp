@@ -2,6 +2,7 @@ import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
+import 'package:calendar_app/shared/popup.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/toast.dart';
 import 'package:calendar_app/shared/widgets/button.dart';
@@ -211,6 +212,26 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   _saveTask() async {
+    if (_titleController.text.isEmpty) {
+      _showError("Title can't be empty.");
+      return;
+    }
+
+    if (_selectedDate.isBefore(DateTime.now())) {
+      _showError("Date can't be in the past.");
+      return;
+    }
+
+    if (_startTime.isBefore(DateTime.now())) {
+      _showError("Start time can't be in the past.");
+      return;
+    }
+
+    if (_endTime.isBefore(_startTime)) {
+      _showError("End time must be after the start time.");
+      return;
+    }
+
     Task task = Task();
 
     task.title = _titleController.text;
@@ -250,6 +271,24 @@ class _TaskScreenState extends State<TaskScreen> {
     }
   }
 
+  _showError(String content) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Popup(
+          title: "Error!",
+          content: content,
+          hideCancel: true,
+          okText: 'Okay',
+          okColor: Theme.of(context).primaryColor,
+          ok: () {
+            if (Navigator.canPop(context)) Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
   _appBar() {
     return AppBar(
       elevation: 0,
@@ -272,78 +311,71 @@ class _TaskScreenState extends State<TaskScreen> {
     );
   }
 
-  _datePicker() {
-    showCupertinoModalPopup<void>(
+  _datePicker() async {
+    FocusScope.of(context).unfocus();
+
+    DateTime? date = await showDatePicker(
       context: context,
-      builder: (BuildContext context) {
-        return _buildBottomPicker(
-          CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.date,
-            initialDateTime: _selectedDate,
-            dateOrder: DatePickerDateOrder.dmy,
-            onDateTimeChanged: (DateTime date) {
-              if (mounted) {
-                setState(() {
-                  _selectedDate = date;
-                });
-              }
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  _timePicker({required bool isStartTime}) {
-    showCupertinoModalPopup<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return _buildBottomPicker(
-          CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.time,
-            initialDateTime: isStartTime ? _startTime : _endTime,
-            dateOrder: DatePickerDateOrder.dmy,
-            minimumDate: isStartTime
-                ? DateTime.now().add(const Duration(minutes: 1))
-                : _startTime,
-            onDateTimeChanged: (DateTime time) {
-              if (mounted) {
-                setState(() {
-                  if (isStartTime) {
-                    _startTime = time;
-                  } else {
-                    _endTime = time;
-                  }
-
-                  // Extra step to make sure the endTime is always after the starttime
-                  if (_endTime.isBefore(_startTime)) _endTime = _startTime;
-                });
-              }
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildBottomPicker(Widget picker) {
-    return Container(
-      height: 200.0,
-      padding: const EdgeInsets.only(top: 6.0),
-      color: CupertinoColors.white,
-      child: DefaultTextStyle(
-        style: const TextStyle(
-          color: CupertinoColors.black,
-          fontSize: 22.0,
-        ),
-        child: GestureDetector(
-          onTap: () {},
-          child: SafeArea(
-            top: false,
-            child: picker,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      cancelText: "Cancel",
+      confirmText: "Okay",
+      builder: (context, child) => Theme(
+        data: ThemeData().copyWith(
+          colorScheme: ColorScheme.light(
+            primary: Theme.of(context).primaryColor,
           ),
         ),
+        child: child!,
       ),
     );
+
+    if (date != null && date != _selectedDate) {
+      setState(() {
+        _selectedDate = date;
+      });
+    }
+  }
+
+  _timePicker({required bool isStartTime}) async {
+    FocusScope.of(context).unfocus();
+
+    TimeOfDay? time = await showTimePicker(
+      context: context,
+      initialTime: isStartTime
+          ? TimeOfDay.fromDateTime(_startTime)
+          : TimeOfDay.fromDateTime(_endTime),
+      cancelText: "Cancel",
+      confirmText: "Okay",
+      builder: (context, child) => Theme(
+        data: ThemeData().copyWith(
+          colorScheme: ColorScheme.light(
+            primary: Theme.of(context).primaryColor,
+          ),
+          timePickerTheme: TimePickerThemeData(
+            dayPeriodBorderSide: BorderSide(
+              color: Theme.of(context).primaryColor.withAlpha(50),
+            ),
+          ),
+        ),
+        child: child!,
+      ),
+    );
+
+    if (time != null && mounted) {
+      setState(() {
+        DateTime now = DateTime.now();
+        if (isStartTime) {
+          _startTime =
+              DateTime(now.year, now.month, now.day, time.hour, time.minute);
+        } else {
+          _endTime =
+              DateTime(now.year, now.month, now.day, time.hour, time.minute);
+        }
+
+        if (_endTime.isBefore(_startTime)) _endTime = _startTime;
+      });
+    }
   }
 }
