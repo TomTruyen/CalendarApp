@@ -24,7 +24,13 @@ class TaskItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(task.title, style: _textStyle()),
+              Text(
+                task.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                style: _textStyle(),
+              ),
               Text(
                 "${_formatTime(time: task.startTime)} - ${_formatTime(time: task.endTime)}",
                 style: _textStyle(),
