@@ -3,6 +3,7 @@ import 'package:calendar_app/screens/task_screen.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
+import 'package:calendar_app/shared/popup.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/toast.dart';
 import 'package:flutter/cupertino.dart';
@@ -122,65 +123,32 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
-          title: const Text(
-            "Delete this task?",
-            style: TextStyle(fontSize: 14),
-          ),
-          actions: [
-            TextButton(
-              style: ButtonStyle(
-                overlayColor: MaterialStateColor.resolveWith(
-                  (states) => Theme.of(context).primaryColor.withAlpha(50),
-                ),
-                foregroundColor: MaterialStateColor.resolveWith(
-                  (states) => Theme.of(context).primaryColor,
-                ),
-              ),
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: ButtonStyle(
-                overlayColor: MaterialStateColor.resolveWith(
-                  (states) => Colors.red.withAlpha(50),
-                ),
-                foregroundColor: MaterialStateColor.resolveWith(
-                  (states) => Colors.red,
-                ),
-              ),
-              child: const Text(
-                "Delete",
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-              onPressed: () async {
-                if (await _taskService.delete(widget.task.id) > 0) {
-                  Toast.display(context, message: "Task deleted!");
+        return Popup(
+          title: "Delete this task?",
+          cancelText: 'Cancel',
+          cancelColor: Theme.of(context).primaryColor,
+          cancel: () {
+            Navigator.of(context).pop();
+          },
+          okText: 'Delete',
+          okColor: Colors.red,
+          ok: () async {
+            if (await _taskService.delete(widget.task.id) > 0) {
+              Toast.display(context, message: "Task deleted!");
 
-                  NotificationService().cancelScheduledNotification(
-                    widget.task,
-                  );
+              NotificationService().cancelScheduledNotification(
+                widget.task,
+              );
 
-                  widget.refresh();
+              widget.refresh();
 
-                  if (Navigator.canPop(context)) Navigator.pop(context, true);
-                } else {
-                  Toast.display(context, message: "Failed to delete task.");
+              if (Navigator.canPop(context)) Navigator.pop(context, true);
+            } else {
+              Toast.display(context, message: "Failed to delete task.");
 
-                  if (Navigator.canPop(context)) Navigator.pop(context, false);
-                }
-              },
-            ),
-          ],
+              if (Navigator.canPop(context)) Navigator.pop(context, false);
+            }
+          },
         );
       },
     );
