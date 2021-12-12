@@ -40,7 +40,7 @@ class Popup extends StatelessWidget {
       ),
       content: content != null
           ? Text(content!, style: const TextStyle(fontSize: 14))
-          : Container(),
+          : null,
       actions: [
         if (!hideCancel)
           TextButton(
