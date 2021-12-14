@@ -8,7 +8,7 @@ const Color darkGreyColor = Color(0xFF121212);
 
 class Themes {
   static const lightPrimary = blueColor;
-  static const darkPrimary = darkGreyColor;
+  static const darkPrimary = Colors.white;
 
   static const lightStatus = Colors.white;
   static const darkStatus = darkGreyColor;
@@ -24,7 +24,7 @@ class Themes {
   );
 
   static final dark = ThemeData(
-    primaryColor: darkGreyColor,
+    primaryColor: const Color(0xFFBA86FC),
     brightness: Brightness.dark,
     backgroundColor: darkGreyColor,
     scaffoldBackgroundColor: darkGreyColor,
@@ -39,7 +39,6 @@ TextStyle get headingStyle {
     textStyle: const TextStyle(
       fontSize: 30,
       fontWeight: FontWeight.bold,
-      color: Colors.black,
     ),
   );
 }
@@ -59,7 +58,6 @@ TextStyle get titleStyle {
     textStyle: const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
-      color: Colors.black,
     ),
   );
 }

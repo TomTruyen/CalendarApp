@@ -1,5 +1,6 @@
 import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/screens/task_screen.dart';
+import 'package:calendar_app/services/globals.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/shared/themes.dart';
@@ -20,6 +21,7 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class CalendarScreenState extends State<CalendarScreen> {
+  final Globals _globals = Globals();
   final TaskService _taskService = TaskService.instance;
   DateTime _selectedDate = DateTime.now();
 
@@ -48,7 +50,7 @@ class CalendarScreenState extends State<CalendarScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _taskBar(),
-          _datePicker(),
+          _datePicker(_globals.isDarkMode),
           const SizedBox(height: 20),
           _taskList(),
         ],
@@ -91,7 +93,7 @@ class CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _datePicker() {
+  Widget _datePicker(bool isDarkMode) {
     return Container(
       margin: const EdgeInsets.only(top: 20, left: 16, right: 16),
       child: DatePickerTimeline.DatePicker(
@@ -99,6 +101,20 @@ class CalendarScreenState extends State<CalendarScreen> {
         initialSelectedDate: DateTime.now(),
         selectionColor: Theme.of(context).primaryColor,
         selectedTextColor: Colors.white,
+        dayTextStyle: GoogleFonts.lato(
+          textStyle: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        monthTextStyle: GoogleFonts.lato(
+          textStyle: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         dateTextStyle: GoogleFonts.lato(
           textStyle: const TextStyle(
             fontSize: 20,
