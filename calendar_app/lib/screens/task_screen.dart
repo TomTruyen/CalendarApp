@@ -2,7 +2,6 @@ import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/services/globals.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
-import 'package:calendar_app/services/theme_service.dart';
 import 'package:calendar_app/shared/datetime_extension.dart';
 import 'package:calendar_app/shared/popup.dart';
 import 'package:calendar_app/shared/themes.dart';
@@ -32,7 +31,6 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen> {
   final Globals _globals = Globals();
   final TaskService _taskService = TaskService.instance;
-  final ThemeService _themeService = ThemeService();
 
   int? _id;
   TextEditingController _titleController = TextEditingController();

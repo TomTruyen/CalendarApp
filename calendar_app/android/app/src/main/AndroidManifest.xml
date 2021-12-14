@@ -4,6 +4,7 @@
         android:label="MyCalendar"
         android:icon="@mipmap/ic_launcher">
         <activity
+            android:allowBackup="true"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

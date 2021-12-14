@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:calendar_app/models/task.dart';
+import 'package:external_path/external_path.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TaskService {
@@ -27,7 +31,7 @@ class TaskService {
   }
 
   Future<Database> _initDatabase() async {
-    String databasePath = await getDatabasesPath();
+    String databasePath = await _getPersistentDBPath();
     String path = join(databasePath, _databaseName);
     return await openDatabase(
       path,
@@ -49,6 +53,24 @@ class TaskService {
         $columnCompleted INTEGER
       )
     ''');
+  }
+
+  Future<String> _getPersistentDBPath() async {
+    try {
+      if (await Permission.storage.request().isGranted) {
+        List<String> paths = await ExternalPath.getExternalStorageDirectories();
+
+        if (paths.isEmpty) throw Error();
+
+        String directoryPath = "${paths[0]}/mycalendar_persistent";
+        await (Directory(directoryPath).create());
+        return "$directoryPath/my_calendar.db";
+      }
+
+      // ignore: empty_catches
+    } catch (e) {}
+
+    return await getDatabasesPath();
   }
 
   Future<Task> insert(Task task) async {
