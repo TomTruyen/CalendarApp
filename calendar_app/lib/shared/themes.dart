@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color blueColor = Color(0xFF4e5ae8);
+const Color lightThemePrimary = Color(0xFF4e5ae8);
+const Color darkThemePrimary = Color(0xFFBA86FC);
 const Color yellowolor = Color(0xFFFFB746);
 const Color pinkColor = Color(0xFFFF4667);
 const Color darkGreyColor = Color(0xFF121212);
 
 class Themes {
-  static const lightPrimary = blueColor;
-  static const darkPrimary = Colors.white;
-
   static const lightStatus = Colors.white;
   static const darkStatus = darkGreyColor;
 
   static final light = ThemeData(
-    primaryColor: blueColor,
+    primaryColor: lightThemePrimary,
     brightness: Brightness.light,
     backgroundColor: Colors.white,
     scaffoldBackgroundColor: Colors.white,
@@ -24,7 +22,7 @@ class Themes {
   );
 
   static final dark = ThemeData(
-    primaryColor: const Color(0xFFBA86FC),
+    primaryColor: darkThemePrimary,
     brightness: Brightness.dark,
     backgroundColor: darkGreyColor,
     scaffoldBackgroundColor: darkGreyColor,

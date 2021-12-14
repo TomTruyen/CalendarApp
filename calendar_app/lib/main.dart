@@ -41,12 +41,12 @@ class _MyAppState extends State<MyApp> {
       title: 'Calendar App',
       theme: Themes.light.copyWith(
         colorScheme: Themes.light.colorScheme.copyWith(
-          secondary: Themes.lightPrimary,
+          secondary: Themes.light.primaryColor,
         ),
       ),
       darkTheme: Themes.dark.copyWith(
         colorScheme: Themes.dark.colorScheme.copyWith(
-          secondary: Themes.darkPrimary,
+          secondary: Themes.dark.primaryColor,
         ),
       ),
       themeMode: _globals.isDarkMode ? ThemeMode.dark : ThemeMode.light,

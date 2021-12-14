@@ -11,7 +11,6 @@ import 'package:calendar_app/shared/widgets/button.dart';
 import 'package:calendar_app/shared/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -71,7 +70,10 @@ class _TaskScreenState extends State<TaskScreen> {
           DateTime.now().add(
             const Duration(minutes: 16),
           );
-      _selectedColor = widget.editTask?.color ?? const Color(0xFF4e5ae8);
+      _selectedColor = widget.editTask?.color ??
+          (_globals.isDarkMode
+              ? const Color(0xFFBA86FC)
+              : const Color(0xFF4e5ae8));
     });
   }
 
@@ -164,7 +166,9 @@ class _TaskScreenState extends State<TaskScreen> {
                           (index) {
                             Color color = Colors.grey;
 
-                            if (index == 0) color = const Color(0xFF4e5ae8);
+                            if (index == 0) {
+                              color = Theme.of(context).primaryColor;
+                            }
                             if (index == 1) color = const Color(0xFFFFB746);
                             if (index == 2) color = const Color(0xFFFF4667);
 
@@ -296,7 +300,7 @@ class _TaskScreenState extends State<TaskScreen> {
         splashRadius: 16,
         icon: Icon(
           Icons.arrow_back_ios_new,
-          color: _globals.isDarkMode? Colors.white : Colors.black,
+          color: _globals.isDarkMode ? Colors.white : Colors.black,
           size: 16,
         ),
         onPressed: () {

@@ -1,15 +1,28 @@
 import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/screens/task_detail_screen.dart';
+import 'package:calendar_app/services/globals.dart';
+import 'package:calendar_app/shared/themes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TaskItem extends StatelessWidget {
+  final Globals _globals = Globals();
   final Task task;
   final Function refresh;
 
-  const TaskItem({Key? key, required this.task, required this.refresh})
+  TaskItem({Key? key, required this.task, required this.refresh})
       : super(key: key);
+
+  getColor(Color color) {
+    if (_globals.isDarkMode && color == Themes.light.primaryColor) {
+      return Themes.dark.primaryColor;
+    } else if (!_globals.isDarkMode && color == Themes.dark.primaryColor) {
+      return Themes.light.primaryColor;
+    }
+
+    return task.color;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +30,7 @@ class TaskItem extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: task.color,
+            color: getColor(task.color),
           ),
           padding: const EdgeInsets.all(10),
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
