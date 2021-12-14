@@ -3,7 +3,6 @@ import 'package:calendar_app/screens/task_screen.dart';
 import 'package:calendar_app/services/globals.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
-import 'package:calendar_app/services/theme_service.dart';
 import 'package:calendar_app/shared/popup.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/toast.dart';
@@ -25,9 +24,14 @@ class TaskDetailScreen extends StatefulWidget {
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final Globals _globals = Globals();
   final TaskService _taskService = TaskService.instance;
-  final ThemeService _themeService = ThemeService();
 
   Task _task = Task();
+
+  @override
+  void initState() {
+    _task = widget.task;
+    super.initState();
+  }
 
   void refresh(Task task) {
     setState(() {
