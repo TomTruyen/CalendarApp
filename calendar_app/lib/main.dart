@@ -1,8 +1,8 @@
 import 'package:calendar_app/screens/calendar_screen.dart';
+import 'package:calendar_app/services/globals.dart';
 import 'package:calendar_app/services/theme_service.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,25 +16,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final Globals _globals = Globals();
   final ThemeService _themeService = ThemeService();
-  bool _isDarkMode = false;
 
-  _MyAppState() {
+  @override
+  void initState() {
     init();
+    super.initState();
   }
 
   void init() async {
-    bool isDarkMode = await _themeService.isDarkTheme();
-
-    setTheme(isDarkMode);
+    _globals.isDarkMode = await _themeService.isDarkTheme();
+    refresh();
   }
 
-  void setTheme(bool isDarkMode) {
-    _themeService.setTheme(isDarkMode);
-
-    setState(() {
-      _isDarkMode = isDarkMode;
-    });
+  void refresh() {
+    setState(() {});
   }
 
   @override
@@ -52,18 +49,14 @@ class _MyAppState extends State<MyApp> {
           secondary: Themes.darkPrimary,
         ),
       ),
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: _globals.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor:
-                _isDarkMode ? Themes.darkStatus : Themes.lightStatus,
-          ),
           actions: <Widget>[
             IconButton(
               splashRadius: 16,
-              icon: _isDarkMode
+              icon: _globals.isDarkMode
                   ? const Icon(
                       Icons.light_mode_outlined,
                       color: Colors.white,
@@ -75,7 +68,8 @@ class _MyAppState extends State<MyApp> {
                       size: 20,
                     ),
               onPressed: () {
-                setTheme(!_isDarkMode);
+                _globals.isDarkMode = !_globals.isDarkMode;
+                refresh();
               },
             )
           ],

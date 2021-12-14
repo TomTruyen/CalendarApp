@@ -1,5 +1,6 @@
 import 'package:calendar_app/models/task.dart';
 import 'package:calendar_app/screens/task_screen.dart';
+import 'package:calendar_app/services/globals.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
@@ -8,7 +9,6 @@ import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class TaskDetailScreen extends StatefulWidget {
@@ -23,27 +23,11 @@ class TaskDetailScreen extends StatefulWidget {
 }
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
+  final Globals _globals = Globals();
   final TaskService _taskService = TaskService.instance;
   final ThemeService _themeService = ThemeService();
 
-  bool _isDarkMode = false;
-
   Task _task = Task();
-
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
-
-  void init() async {
-    bool isDarkMode = await _themeService.isDarkTheme();
-
-    setState(() {
-      _isDarkMode = isDarkMode;
-      _task = widget.task;
-    });
-  }
 
   void refresh(Task task) {
     setState(() {
@@ -99,14 +83,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   _appBar() {
     return AppBar(
       elevation: 0,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: _isDarkMode ? Themes.darkStatus : Themes.lightStatus,
-      ),
       leading: IconButton(
         splashRadius: 16,
         icon: Icon(
           Icons.arrow_back_ios_new,
-          color: _isDarkMode ? Colors.white : Colors.black,
+          color: _globals.isDarkMode ? Colors.white : Colors.black,
           size: 16,
         ),
         onPressed: () {
@@ -120,7 +101,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           splashRadius: 16,
           icon: Icon(
             Icons.create_outlined,
-            color: _isDarkMode ? Colors.white : Colors.black,
+            color: _globals.isDarkMode ? Colors.white : Colors.black,
             size: 20,
           ),
           onPressed: () {
@@ -140,7 +121,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           splashRadius: 16,
           icon: Icon(
             Icons.delete_outlined,
-            color: _isDarkMode ? Colors.white : Colors.black,
+            color: _globals.isDarkMode ? Colors.white : Colors.black,
             size: 20,
           ),
           onPressed: () async {

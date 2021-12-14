@@ -1,4 +1,5 @@
 import 'package:calendar_app/models/task.dart';
+import 'package:calendar_app/services/globals.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
 import 'package:calendar_app/services/theme_service.dart';
@@ -30,6 +31,7 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
+  final Globals _globals = Globals();
   final TaskService _taskService = TaskService.instance;
   final ThemeService _themeService = ThemeService();
 
@@ -42,7 +44,6 @@ class _TaskScreenState extends State<TaskScreen> {
   Color _selectedColor = const Color(0xFF4e5ae8);
 
   bool _isEdit = false;
-  bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -51,10 +52,7 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   void init() async {
-    bool isDarkMode = await _themeService.isDarkTheme();
-
     setState(() {
-      _isDarkMode = isDarkMode;
       _isEdit = widget.isEdit;
 
       _id = widget.editTask?.id;
@@ -294,14 +292,11 @@ class _TaskScreenState extends State<TaskScreen> {
   _appBar() {
     return AppBar(
       elevation: 0,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: _isDarkMode ? Themes.darkStatus : Themes.lightStatus,
-      ),
       leading: IconButton(
         splashRadius: 16,
         icon: Icon(
           Icons.arrow_back_ios_new,
-          color: _isDarkMode ? Colors.white : Colors.black,
+          color: _globals.isDarkMode? Colors.white : Colors.black,
           size: 16,
         ),
         onPressed: () {
