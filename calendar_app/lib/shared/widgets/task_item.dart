@@ -69,8 +69,9 @@ class TaskItem extends StatelessWidget {
   }
 
   _textStyle() {
-    return const TextStyle(
-      color: Color(0xFFF0F0F0),
+    return TextStyle(
+      color: const Color(0xFFF0F0F0),
+      decoration: task.completed ? TextDecoration.lineThrough : null,
     );
   }
 }

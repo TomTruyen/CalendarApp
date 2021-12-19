@@ -3,6 +3,7 @@ import 'package:calendar_app/screens/task_screen.dart';
 import 'package:calendar_app/services/globals.dart';
 import 'package:calendar_app/services/notification_service.dart';
 import 'package:calendar_app/services/task_service.dart';
+import 'package:calendar_app/shared/datetime_extension.dart';
 import 'package:calendar_app/shared/popup.dart';
 import 'package:calendar_app/shared/themes.dart';
 import 'package:calendar_app/shared/toast.dart';
@@ -80,6 +81,62 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: GestureDetector(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          color: Theme.of(context).primaryColor.withAlpha(75),
+          child: Text(
+            _task.completed ? "Mark as uncompleted" : "Mark as done",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        onTap: () async {
+          if (_task.completed &&
+              (_task.date.isBeforeDate(DateTime.now()) ||
+                  _task.startTime.isBefore(DateTime.now()) ||
+                  _task.endTime.isBefore(_task.startTime))) {
+            Toast.display(
+              context,
+              message: "Can't mark task as uncompleted (date is in the past)",
+            );
+            return;
+          }
+
+          _task.completed = !_task.completed;
+
+          if (await _taskService.update(_task) >= 0) {
+            Toast.display(
+              context,
+              message: _task.completed
+                  ? "Task marked as completed"
+                  : "Task marked as uncompleted",
+            );
+
+            if (_task.completed) {
+              NotificationService().cancelScheduledNotification(_task);
+            } else {
+              NotificationService().scheduleNotification(_task);
+            }
+
+            refresh(_task);
+
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+          } else {
+            Toast.display(
+              context,
+              message: _task.completed
+                  ? "Failed to mark task as completed"
+                  : "Failed to mark task as uncompleted",
+            );
+          }
+        },
       ),
     );
   }
